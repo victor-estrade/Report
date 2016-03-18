@@ -60,3 +60,12 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# PDF
+*.pdf
+
+# HTML
+*.html
+
+# Figure directories
+fig/
