@@ -1,6 +1,9 @@
 
 Ici sont rassemblés les notes, idées et résultats obtenus jusqu'à présent.
 
+\subsection{Rappel personnel} % (fold)
+\label{sub:rappel_personnel}
+
 Rappel de cours : les fonctions d'activation comme tanh ou sigmoïde peuvent 
 saturer. En général un pas d'apprentissage de l'ordre de 1 est salutaire pour 
 pouvoir sortir de l'état saturé. De plus le gradient est borné. Il n'y a donc 
@@ -16,20 +19,28 @@ La descente de gradient reviendrait à demander à une fourmi de trouver la
 vallée dans une route rocailleuse. Elle serait facilement bloquée dans un
 minimum local.
 
-Passer de ReLU à tanh ou sigmoïde requiert donc systématiquement de changer 
-le pas d'apprentissage
+Passer de ReLU à tanh ou sigmoïde requiert donc systématiquement d'adapter
+le pas d'apprentissage.
 
+% subsection rappel_personnel (end)
+\subsection{Reverse gradient layer astuce} % (fold)
+\label{sub:reverse_gradient_layer_astuce}
 
-\TODO RGL : $\lambda = -1 \iff \cancel{\text{RGL}}$ 
-\TODO RGL : $\lambda = 0 \iff \cancel{\text{Adaptation}}$ 
+RGL : $\lambda_D = -1 \iff \cancel{\text{RGL}}$
 
+Choisir $\lambda_D = -1$ est équivalent à ne pas avoir de RGL, le gradient se 
+retrouve inchangé ($grad \gets -1\times-1\times grad $).
 
-Commençons pas l'application sur des données artificielles simples et 
-facilement interprétables.
+RGL : $\lambda_D = 0 \iff \cancel{\text{Adaptation}}$
 
+Choisir $\lambda_D = 0$ est équivalent à ne pas avoir d'adaptation, le gradient se 
+retrouve bloqué par le RGL ($grad \gets -1\times0\times grad $).
+
+% subsection reverse_gradient_layer_astuce (end)
 \subsection{Moons} % (fold)
 \label{sub:moons}
-\TODO Présenter les résultats sur Moon !
+Commençons pas l'application sur des données artificielles simples et 
+facilement interprétables.
 
 L'exemple des 2 lunes imbriquées est un problème non linéaire simple. Un
 réseaux de neurone à 1 couche caché de 3 neurones permet de le résoudre
@@ -91,8 +102,10 @@ aléatoirement.
 % subsection moons (end)
 
 \TODO Présenter les résultats sur MNIST "bruité" !
+\TODO Pour faire ça il faudrait les matrices de confusion !
 
 \TODO L'exemple de MNIST Miroir qui ne marche pas du tout avec un DANN sans
 convolution mais qui ne nécessite pas d'aide avec une couche de convolution
+\TODO Pour faire ça il faudrait les matrices de confusion !
 
 
