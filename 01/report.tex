@@ -45,7 +45,7 @@
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{Super titre de fou !}
+\icmltitlerunning{Journal 01}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[francais]{babel}
@@ -55,8 +55,12 @@
 \usetikzlibrary{arrows,calc,through,backgrounds,matrix,decorations.pathmorphing,decorations.pathreplacing}
 \usepackage{xcolor}
 \usepackage{lipsum}
+\usepackage{cancel}
+\usepackage{subfigure}
+\usepackage{placeins}
 
-\newcommand{\TODO}{\textcolor{red}{TODO: }}
+
+\newcommand{\TODO}{\par\textcolor{red}{À faire: }}
 
 \begin{document} 
 
@@ -91,6 +95,26 @@ L'abstract.
 \input{sections/problem.tex}
 
 % section le_problème (end)
+\section{Le DANN} % (fold)
+\label{sec:le_DANN}
+\input{sections/dann.tex}
+
+% section le_DANN (end)
+\section{Implémentation} % (fold)
+\label{sec:implementation}
+\input{sections/implementation.tex}
+
+% section implémentation (end)
+\section{Notes} % (fold)
+\label{sec:notes}
+\input{sections/notes.tex}
+
+% section notes (end)
+\section{Future} % (fold)
+\label{sec:future}
+\input{sections/future.tex}
+
+% section future (end)
 
 \bibliography{report}
 \bibliographystyle{icml2016}
