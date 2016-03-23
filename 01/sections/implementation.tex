@@ -1,6 +1,7 @@
 
 Dans cette section je vais décrire les choix d'implémentation ainsi que 
-quelques détails techniques.
+quelques détails techniques. Cette section sert surtout à nous rappeler
+le pourquoi de certain choix. N'hésitez pas à passer cette section.
 
 Le code est présent ici : \url{https://github.com/victor-estrade/DANN}
 
@@ -61,7 +62,6 @@ Sont implémentés pour l'instant:
 \end{itemize}
 
 % subsection les_réseaux (end)
-
 \subsection{Quelques détails} % (fold)
 \label{sub:quelques_details}
 
@@ -69,21 +69,18 @@ Le code est encore assez mal organisé. Plusieurs refontes sont à prévoir.
 
 Actuellement les données sont transférées sous forme de dictionnaire. Ce qui 
 n'est pas nécessairement des plus pratiques. De façon générale la fonction 
-d'entraînement n'est pas très bien pensé et changera sûrement à l'avenir.
+d'entraînement n'est pas très bien pensée et changera sûrement à l'avenir.
 
 Lasagne/Theano a comme principal défaut de ne pas permettre d'avoir plusieurs
 entrés différentes sur une même couche. Ceci nous oblige à dupliquer les réseaux.
 Un réseau correspond à une entrée. Puis il faut forcer le partage des poids afin
 de lier la partie commune aux diverses entrées.
 
-Ce problème pourrait être corrigé en implémentant un ConcatLayer qui serait chargé
-de concaténer des données d'entrée. Puis un SplitLayer qui ferait le travail inverse
+Ce problème pourrait être corrigé en utilisant un ConcatLayer qui serait chargé
+de concaténer des données d'entrée. Puis un SliceLayer qui ferait le travail inverse
 si l'on doit aussi envoyé des sous-parties des données à des sorties différentes.
 Cependant le batchsize est pour l'instant donnée au moment de l'entraînement
-et non pas à la construction du réseau.
+et non pas à la construction du réseau. Cet utilisation changerait donc la
+façon de faire l'entraînement.
 
-\TODO Les défauts et nos solutions
-\TODO Définition d'un MergeLayer pour concaténer les données et d'un autre
-pour les séparer
 % subsection quelques_détails (end)
-
