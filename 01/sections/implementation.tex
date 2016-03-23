@@ -1,4 +1,89 @@
 
+Dans cette section je vais décrire les choix d'implémentation ainsi que 
+quelques détails techniques.
+
 Le code est présent ici : \url{https://github.com/victor-estrade/DANN}
 
-\TODO Les classes de NN
+Nous avons choisi de ré-implémenter le DANN avec 
+\href{http://deeplearning.net/software/theano/}{Theano}
+et \href{http://lasagne.readthedocs.org/en/latest/index.html}{Lasagne}
+afin de mieux contrôler le code mais aussi pour éviter les problèmes de 
+compatibilité entre les versions de \href{http://caffe.berkeleyvision.org/}{Caffe}.
+
+Le workflow de Lasagne fonctionne en 3 temps:
+\begin{enumerate}
+	\item Définir l'architecture du réseau de neurones
+	\item Définir et compiler les fonctions d'entraînement et de test
+	\item Entraîner le réseau en lui fournissant les données
+\end{enumerate}
+
+\subsection{Les réseaux} % (fold)
+\label{sub:les_reseaux}
+
+La première étape est de définir le \emph{Reversal Gradient Layer} (RGL).
+Son implémentation ne demande pas trop d'effort mais une certaine connaissance
+de Theano et de Lasagne. Cependant le travail a déjà été fait
+\href{http://stackoverflow.com/questions/33879736/can-i-selectively-invert-theano-gradients-during-backpropagation}{ici}.
+
+Dans un deuxième temps nous devons définir les réseaux de neurones. Leurs
+architectures, la compilation et l'entraînement. Nous avons choisi 
+d'implémenter les réseaux sous forme de classe en suivant quelques principes:
+
+\begin{enumerate}
+	\item Les données ne doivent pas être un attribut de la classe. Cela 
+	facilite la sauvegarde du réseaux et évite que le Garbage Collector ne puisse 
+	libérer la mémoire à cause du pointeur présent dans l'objet représentant 
+	le réseau de neurone.
+	\item La classe ne doit gérer que la partie structure du réseaux de neurone.
+	La partie propagation arrière est gérée par les compilateurs afin d'éviter 
+	la duplication de code.
+	\item Les hyper-paramètres sont donnés au constructeur de la classe autant
+	que possible. On évite de séparer les hyper-paramètres. La méthode 
+	d'entraînement doit rester simple d'utilisation et ne prendre en argument 
+	que les paramètres concernant les données ou le suivi le l'entraînement.
+	\item La définition des couches du réseaux se fait dans la méthode 
+	\emph{\_build()} appelé en fin d'initialisation. Choix purement esthétique.
+	\item La compilation se fait en donnant une fonction de compilation
+	gérant la propagation arrière. Une compilation par propagation arrière ie
+	une fonction par propagation arrière.
+	\item Tous les compilateurs doivent être implémentés de la même façon. 
+	Construire les mêmes fonctions, dans le même ordre.
+	\item La méthode d'entraînement prend les données en argument et assure le
+	suivi de l'entraînement. Elle ne rend rien ou bien elle rend des statistiques
+	utiles à l'étude du déroulement de l'entraînement.
+\end{enumerate}
+
+Sont implémentés pour l'instant:
+\begin{itemize}
+	\item Un DANN minimaliste à une seule couche dense de représentation
+	\item Un DANN à multiple couche dense de représentation
+	\item La descente de gradient stochastique avec ou sans moment.
+\end{itemize}
+
+% subsection les_réseaux (end)
+
+\subsection{Quelques détails} % (fold)
+\label{sub:quelques_details}
+
+Le code est encore assez mal organisé. Plusieurs refontes sont à prévoir.
+
+Actuellement les données sont transférées sous forme de dictionnaire. Ce qui 
+n'est pas nécessairement des plus pratiques. De façon générale la fonction 
+d'entraînement n'est pas très bien pensé et changera sûrement à l'avenir.
+
+Lasagne/Theano a comme principal défaut de ne pas permettre d'avoir plusieurs
+entrés différentes sur une même couche. Ceci nous oblige à dupliquer les réseaux.
+Un réseau correspond à une entrée. Puis il faut forcer le partage des poids afin
+de lier la partie commune aux diverses entrées.
+
+Ce problème pourrait être corrigé en implémentant un ConcatLayer qui serait chargé
+de concaténer des données d'entrée. Puis un SplitLayer qui ferait le travail inverse
+si l'on doit aussi envoyé des sous-parties des données à des sorties différentes.
+Cependant le batchsize est pour l'instant donnée au moment de l'entraînement
+et non pas à la construction du réseau.
+
+\TODO Les défauts et nos solutions
+\TODO Définition d'un MergeLayer pour concaténer les données et d'un autre
+pour les séparer
+% subsection quelques_détails (end)
+
