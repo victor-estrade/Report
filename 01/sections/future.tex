@@ -10,6 +10,7 @@ Concernant le code quelques fonctionnalités peuvent être ajoutées:
 	\item La fonction rendant la représentation intermédiaire
 	\item le clonage des poids pour les réseaux siamois
 	\item Implémenter la Reverse (Cross) Validation
+	\item Refonte de l'implémentation pour introduire Concat/SliceLayer
 \end{itemize}
 
 De plus il serait judicieux d'ajouter aux exemples les graphiques obtenus
@@ -28,7 +29,7 @@ dans l'espace d'origine.
 On a ainsi deux domaines: 
 les données originelles $X_S$ et les données transformées $X_T = \phi(X_S)$.
 On souhaite apprendre une représentation commune. Cependant les contraintes 
-d'interprétabilité impose que l'on laisse les données originelle tel quel et 
+d'interprétabilité imposent que l'on laisse les données originelles inchangées et 
 que l'on se contente de corriger les données transformées pour les ramener sur
 leur distribution d'origine.
 
@@ -40,11 +41,14 @@ Enfin le DANN forcera la représentation intermédiaire, ici les données codée
 
 La structure est représentée figure \ref{fig:AutoDANN}.
 
+On espère ainsi forcer le codeur à apprendre $\phi^{-1}$ ou du moins quelque chose
+de proche.
+
 \begin{figure*}[htbp]
 \centering
 \subfigure[Auto-DANN conceptuel.]
 	{\includegraphics[width=\columnwidth]{fig/AutoDANN.png}}
-\caption{Auto-DANN du point vue conceptuel.}
+\caption{Auto-DANN du point vue conceptuel. (Id = Identité)}
 \label{fig:AutoDANNC}
 
 \subfigure[Auto-DANN propagation avant.]

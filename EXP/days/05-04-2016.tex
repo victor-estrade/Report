@@ -1,5 +1,5 @@
 
-\labday{Mardi, 04-05-2016}
+\labday{Mardi, 5 avril 2016}
 
 Expérimentation sur le correcteur. Je vais résumé ici mes résultats et remarques
 sur l'utilisation d'un correcteur simple (une seule couche) pour apprendre par l'exemple
@@ -10,10 +10,16 @@ Sans utilisation d'adversarial.
 
 \begin{figure}[H] % Example of including images
 \centering
-\includegraphics[width=0.45\linewidth]{fig/05-04-2016/MNISTMirror-PairWiseCorrector-lambda-0.0000-sample.png}
+\includegraphics[width=0.45\linewidth]{fig/05-04-2016/Correcteur.png}
 \caption{Correcteur simple}
 \label{fig:correcteur}
 \end{figure}
+
+Le réseau est entraîné par minibatch avec un nombre d'époque prédéfini à la main.
+La fonction de coût utilisée est la \emph{mean squared error} : $(x_{pred}-x_{vrai})^2$
+
+Puisqu'il n'y a pas de \emph{décodeur} l'unique couche (unique matrice de poids $W$)
+est constituée de $d$ neurone où $d$ est le nombre de descripteur des données.
 
 
 \experiment{Corriger MNIST après transformations linéaires}
@@ -28,12 +34,17 @@ de la reconstruction pour des données avec un bon nombre de descripteurs (748 p
 Tout d'abord j'ai gardé la correspondance entre l'image original et
 l'image transformée pendant l'entraînement du correcteur (cas aligné).
 Ainsi chaque paire d'exemple $(x, \phi(x)) \in MNIST\times \phi(MNIST)$
-contient uniquement l'information que l'on cherche $\phi$
+contient uniquement l'information que l'on cherche $\phi$.
 
-Ce qui donne de très bon résultats en général.
+Ce qui donne de très bon résultats la plupart du temps.\\
 
 
-{\Large\bf Mirror}
+{\Large\textbf{Mirror.}} On commence par une simple permutation des 
+descripteurs de façon à renverser les images.
+
+Le correcteur se débrouille sans souci, sans avoir besoin d'adversarial. Ceci
+nous offre un exemple typique de cas où tout se passe bien. Les résultats sont résumés
+figure \ref{fig:mnist_mirror_pairwise}.
 
 \begin{figure}[H] % Example of including images
 \centering
@@ -49,7 +60,19 @@ Ce qui donne de très bon résultats en général.
 \end{figure}
 
 
-{\Large\bf RMat}
+{\Large\textbf{RMat.}} On se lance maintenant dans un problème légèrement plus
+difficile pour la machine mais impossible pour l'œil humain, une transformation
+linéaire aléatoire:
+$$ \phi(x) = A.x$$
+où $A$ est une matrice générée aléatoirement.
+
+Pour éviter les problèmes d'échelle, les données ont été renormalisées après 
+transformation (sinon : loss = NaN).
+
+Les résultats sur cette transformation sont assez mitigés. De plus elle requiert
+un entraînement particulièrement long (quelques centaines d'époques). Mais bon avec
+les yeux de la fois et en choisissant les bons exemples ça a l'air de fonctionner.
+Une fois de plus les résultats sont résumés figure \ref{fig:mnist_rmat_pairwise}.
 
 \begin{figure}[H] % Example of including images
 \centering
@@ -77,7 +100,14 @@ Ceci est plus proche de cas d'expériences réels. Exemple: des échantillons
 du même type sans être exactement les mêmes et utilisant des instruments
 de précision différents.
 
-{\Large\bf Mirror}
+L'entraînement est donc légèrement plus complexe. Pour le moment j'ai utilisé 
+la version naïve où je sélectionne aléatoirement les exemples d'une même classe
+pour être alignés. Cette sélection change à chaque nouvelle époque. Des 
+améliorations possibles de cette technique seront développées plus loin.\\
+
+
+{\Large\textbf{Mirror.}} à nouveau l'on commence par le cas simple des images 
+miroirs. Cette fois ci la qualité des résultats est plus discutable. 
 
 \begin{figure}[H] % Example of including images
 \centering
@@ -93,7 +123,10 @@ de précision différents.
 \end{figure}
 
 
-{\Large\bf RMat}
+{\Large\textbf{RMat.}} On reprend la transformation linéaire aléatoire:
+$$ \phi(x) = A.x$$
+où $A$ est une matrice générée aléatoirement.
+
 
 \begin{figure}[H] % Example of including images
 \centering
@@ -113,22 +146,7 @@ de précision différents.
 
 \experiment{Corriger Moon après transformations linéaire}
 
-
-
-\begin{table}[H]
-\begin{tabular}{l l l}
-\toprule
-\textbf{Groups} & \textbf{Treatment X} & \textbf{Treatment Y} \\
-\toprule
-1 & 0.2 & 0.8\\
-2 & 0.17 & 0.7\\
-3 & 0.24 & 0.75\\
-4 & 0.68 & 0.3\\
-\bottomrule
-\end{tabular}
-\caption{The effects of treatments X and Y on the four groups studied.}
-\label{tab:treatments_xy}
-\end{table}
-
+Maintenant on passe sur des données à 2 dimensions. L'exemple des demi-lunes
+(Moon) est un exemple non linéaire simple en 2D.
 
 %----------------------------------------------------------------------------------------
