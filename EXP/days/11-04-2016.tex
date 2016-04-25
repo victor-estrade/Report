@@ -89,7 +89,7 @@ Cependant comme vu précédemment (section \ref{exp:moon_0}) dans le cas de
 distribution qui ne sont pas de simples nuages de point `gentils' cette approche 
 peut mener à écraser les données corrigées sur le centre des distributions.
 L'idée est donc d'apprendre l'alignement afin de faire mieux que rapprocher les
-données du centre des distributions Source.
+données du centre des distributions \emph{Source}.
 
 Plutôt que d'aligner aléatoirement les données entre chaque époque on va chercher
 les éléments de la \emph{Source} qui correspondent le plus ou sont plus proche de 
@@ -149,30 +149,93 @@ matrice de distance deux à deux entre les données \emph{Source} et \emph{Cible
 Même si ce calcul peut être parallélisé, il reste particulièrement lourd.
 
 
-\subexperiment{Les clusters (vivent les k-means !)}
+\subexperiment{K-Means}
 
-1) $\psi : \text{source} \mapsto \text{cible}$
+Rappel : 
+On note $\phi$ la fonction inconnue qui a transformé/biaisé les données \emph{Source}
+$\mathcal{X_S}$ donnant ainsi les données \emph{Cible} $\mathcal{X_T}$.
+\begin{align*}
+\phi : \mathcal{X_S}  &\to \mathcal{X_T} \\
+                  x &\mapsto x^\prime
+\end{align*}
+Et $\psi$ la fonction que notre modèle va apprendre. On espère obtenir
+$\psi = \phi^{-1}$.
 
-2) (Hypothèse 1) Source distribué en mixture poids différents
+On fait l'hypothèse (Hypothèse 1) que la \emph{Source} est composé d'une 
+mixture de distributions de poids/probabilités différentes.
+Si $\phi$ est `sympathique' alors la \emph{Cible} est aussi distribué en mixture
 
-- Si $\psi$ est sympathique alors \emph{cible} est aussi distribué en mixture
+À partir d'ici on va utiliser les k-moyennes pour trouver/découper les 
+distributions en clusters. Soient $z_1,...,z_k$ les clusters de la \emph{Source}
+et $p_1, ..., p_k$ les clusters de la \emph{Cible}. À ces centres $z_i$ sont associés
+les ensembles d'exemples $S_i$ (\emph{Source}) et aux centres $p_j$ sont associés
+les ensembles $C_j$ (\emph{Cible}).
 
-$x_i$, centre des distributions sources
-$x_j$, centre des distributions cible
+On a 3 méthodes:
+\begin{enumerate}
+    \item Plutôt que de calculer les distances 2 à 2 entre $\mathcal{X_S}$ et
+    $\mathcal{X_T}$ on le fait entre ${z_1,...,z_k}$ et $\mathcal{X_T}$. 
+    La représentation des données \emph{Source} se limite aux centres de ses 
+    clusters. L'algorithme d'alignement n'est plus quadratique mais 
+    $\mathcal{O} (k\times n)$.
 
-init :
-$$\phi : x_i \mapsto x_j$$
-$$card(C_i) \approx card(C_j)$$
-où $C_i$ est l'ensemble des exemples rattachés au centre $i$
+    Cela a pour défaut de ne pas intégrer la variance des distributions dans le
+    correcteur et risque d'écraser les données dans les centres.
 
-- Si (Hypothèse 1) ne tient pas, alors on utilise un argument de simplicité pour 
-sélectionner (désambiguïser).
+    \item On procède en 2 étapes:
+    \begin{enumerate}
+        \item On calcul les distances 2 à 2 entre ${z_1,...,z_k}$ et
+        ${\psi(p_1),...,\psi(p_k)}$.
+        Ce qui nous donnent des ensembles $S_i$ d'exemples de la \emph{Source} à 
+        associer aux ensembles $C_j$ d'exemples de la \emph{Cible} pour chaque couple 
+        $z_i,p_j$ précédemment associée comme étant proche.
 
-Supposons une série de clusters de centres $z_1, ..., z_k$ et de poids (probabilité)
-$p_1, ... p_k$ formant la distribution \emph{source}.
+        \item Maintenant il reste à trouver les plus proches voisin dans chacun de ces
+        sous ensemble de $X_S$ et $X_T$. C'est-à-dire de calculer les distances 2 à 2
+        entre tous les éléments des $S_i$ et des $C_j$ puis de les aligner avec le k-plus
+        proche voisin ayant le moins été choisis pour le moment. 
+    \end{enumerate}
 
-$$\phi : x^\prime \mapsto i, |\phi(x^\prime) - z_i| + c |p_i-p_i^\prime|$$
+    \item On procède aux même étape que la méthode précédente. Cependant une fois les 
+    ensembles $S_i$ et $C_j$ associés on se contente d'aligner aléatoirement leurs éléments.
+
+\end{enumerate}
 
 
+La méthode 2.a) a l'avantage de pouvoir prendre en compte la variance/les poids
+des clusters dans la distance. Par exemple :
+$$\Delta(z, p) = ||\psi(p) - z|| + C||card(C_i)-card(S_i)||$$
+(card ou une fonction représentant le poids du culster)
+
+L'importance d'utiliser les poids/probabilités des clusters est d'éviter que 
+les solutions soient invariantes par permutation des clusters 
+(figure \ref{fig:cluster_alignment}).
+
+\begin{figure}[H] %
+\centering
+\subfigure[Clusters de même `taille'. Une association possible]
+    {\includegraphics[width=0.45\linewidth]{fig/11-04-2016/Distribs_0.png}}
+\hfill
+\subfigure[Clusters de même `taille'. Une autre association possible. Pas de critère de sélection]
+    {\includegraphics[width=0.45\linewidth]{fig/11-04-2016/Distribs_1.png}}
+
+\subfigure[Clusters de `tailles' différentes. Association possible mais peut probable]
+    {\includegraphics[width=0.45\linewidth]{fig/11-04-2016/Distribs_2.png}}
+\hfill
+\subfigure[Clusters de `tailles' différentes. Association respectant la `taille' des clusters]
+    {\includegraphics[width=0.45\linewidth]{fig/11-04-2016/Distribs_3.png}}
+
+\caption{Exemples d'alignements de clusters. La `taille' d'un cluster peut par
+exemple être représenté par sa population}
+\label{fig:cluster_alignment}
+\end{figure}
+
+
+Si l'hypothèse 1 ne tient pas, alors on utilise un argument de simplicité pour 
+sélectionner (désambiguïser). L'exemple (a) est plus simple que le (b) 
+(figure \ref{fig:cluster_alignment}).
+
+Conseil de lecture :
+Giorgio Patrini, Richard Nock, Paul Rivera, Tiberio Caetano, ``(Almost) No Label No Cry''
 
 %----------------------------------------------------------------------------------------
