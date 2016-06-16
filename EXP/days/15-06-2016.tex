@@ -1,0 +1,140 @@
+
+\labday{Mardi, 12 juin 2016}
+\label{day:12-06-2016}
+
+\experiment{Compréhension du problème de Transport Optimal}
+
+
+On dispose de deux distributions de probabilité $\mathcal{P}_S$ et $\mathcal{P}_T$.
+On désire projeter la distribution $\mathcal{P}_S$ sur $\mathcal{P}_T$.
+Ces distributions sont équipées d'un histogramme (vecteur qui somme à 1) $h^S$ et $h^T$.
+Dans la pratique on dispose de données tirées de ces distributions et pas les 
+distributions elles même. 
+On a $\mathcal{X}_S$ contenant $n_S$ points tirées de $\mathcal{P}_S$.
+Ainsi que $\mathcal{X}_T$ contenant $n_T$ points tirées de $\mathcal{P}_T$.
+
+Exemple : $\forall i, h^S_i = (1/n_S)$ et $\forall j, h^T_j = (1/n_T)$
+
+ou encore : $\forall i, h^S_i = \sum_k e^{-\gamma ||x_i^S-x_k^S||^2}$ et $\forall j, h^T_j = \sum_k e^{-\gamma ||x_j^T-x_k^T||^2}$
+
+Le problème de transport optimal consiste à envoyer la distribution $\mathcal{P}_S$ 
+sur $\mathcal{P}_T$ à moindre coût.
+
+On a besoin d'une matrice de coût $C \in \mathbb{R}^{n_S\times n_T}$ dont 
+l'élément $c_{ij}$ indique le coût d'envoyer $x_i^S$ sur $x_j^T$ 
+(= le coût d'envoyer $h^S_i$ sur $h^T_j$)
+
+On cherche à résoudre : 
+\begin{equation}
+\min_T \left<T,C\right> = \min_{T} \sum_{ij} t_{ij}*c_{ij}
+\end{equation}
+avec
+\begin{equation}
+\forall j, \sum_i t_{ij} = h^T_j 
+\label{mass_in}
+\end{equation}
+\begin{equation}
+\forall i, \sum_j t_{ij} = h^S_i
+\label{mass_out}
+\end{equation}
+\begin{equation}
+\sum_i h^S_i = 1
+\label{mass_in_tot}
+\end{equation}
+\begin{equation}
+\sum_j h^T_j = 1	
+\label{mass_out_tot}
+\end{equation}
+
+l'équation \eqref{mass_in} signifie que la somme de la masse des éléments de $\mathcal{X}_S$
+envoyés sur $x^T_j$ vaut $h^T_j$, ie $x^T_j$ ne reçoit pas plus que sa capacité.
+
+l'équation \eqref{mass_out} signifie que la somme de la masse de $x^S_i$ envoyé dans les 
+éléments de $\mathcal{X}_T$ vaut $h^S_i$, ie $x^S_i$ ne donne pas plus qu'il ne possède.
+
+
+
+\subexperiment{Cas 2 points 2D}
+
+On traite le cas simple de 2 points $A\ (x_A, y_A)$ et $B\ (x_B, y_B)$ 
+que l'on veux projeter sur $A^\prime\ (x_{A^\prime}, y_{A^\prime})$ et $B\ (x_{B^\prime}, y_{B^\prime})$ 
+
+On a une matrice de coût :
+$$
+C = 
+\begin{pmatrix}
+   c_{AA^\prime} & c_{AB^\prime} \\
+   c_{BA^\prime} & c_{BB^\prime} 
+\end{pmatrix}
+$$
+
+on cherche : 
+\begin{equation}
+\min_T \left<T,C\right> = \min_{T} 
+t_{AA^\prime}*c_{AA^\prime} + 
+t_{AB^\prime}*c_{AB^\prime} + 
+t_{BA^\prime}*c_{BA^\prime} + 
+t_{BB^\prime}*c_{BB^\prime}
+\end{equation}
+
+\begin{equation}
+\left \{
+\begin{array}{r c l}
+  t_{AA^\prime} + t_{AB^\prime}  & = & 1 \\
+  t_{BA^\prime} + t_{BB^\prime}  & = & 1 \\
+  t_{AA^\prime} + t_{BA^\prime}  & = & 1 \\
+  t_{AB^\prime} + t_{BB^\prime}  & = & 1 \\
+\end{array}
+\right .
+\text{d'où}
+\left \{
+\begin{array}{r c l}
+  t_{AA^\prime}  & = & 1 - t_{AB^\prime}\\
+  t_{BB^\prime}  & = & 1 - t_{BA^\prime}\\
+  t_{AA^\prime}  & = & 1 - t_{BA^\prime}\\
+  t_{AB^\prime}  & = & 1 - t_{BB^\prime}\\
+\end{array}
+\right .
+\text{donc}
+\left \{
+\begin{array}{r c l}
+  t_{AA^\prime}  & = & t_{BB^\prime}\\
+  t_{AB^\prime}  & = & t_{BA^\prime}\\
+  t_{AA^\prime}  & = & 1 - t_{BA^\prime}\\
+\end{array}
+\right .
+\end{equation}
+
+on définit : $\rho = t_{AA^\prime} = t_{BB^\prime}$ on a $1-\rho = t_{AB^\prime} = t_{BA^\prime}$ et $0\leq \rho\leq 1$
+
+ce qui donne :
+$$
+T = 
+\begin{pmatrix}
+   \rho & 1-\rho \\
+   1- \rho & \rho
+\end{pmatrix}
+$$
+et le problème devient
+\begin{equation}
+\min_\rho \rho c_{AA^\prime} + (1- \rho) c_{AB^\prime} + (1-\rho) c_{BA^\prime} + \rho c_{BB^\prime}
+\end{equation}
+\begin{equation}
+\min_\rho \rho (c_{AA^\prime} + c_{BB^\prime} - c_{AB^\prime} - c_{BA^\prime}) + 2
+\end{equation}
+
+au final :
+
+\begin{equation}
+\rho = \left \{
+\begin{array}{r c l}
+	1\ \text{si}\ c_{AA^\prime} + c_{BB^\prime} \leq c_{AB^\prime} + c_{BA^\prime} \\
+	0\ \text{si}\ c_{AA^\prime} + c_{BB^\prime} \geq c_{AB^\prime} + c_{BA^\prime} \\
+\end{array}
+\right .
+\end{equation}
+
+
+
+
+%----------------------------------------------------------------------------------------
