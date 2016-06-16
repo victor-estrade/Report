@@ -380,8 +380,9 @@ la plupart du temps et plus les points d'une même classes seront dispersés plu
 \end{figure}
 
 Premier cas illustrant la défaillance de cette méthode pour apprendre l'alignement. 
-Les données sont écrasées sur au centre. On verra avec le jeu de donnée Moons que les 
-données sont écrasés sur les centres de classe et non pas que le réseau préfère tout projeter sur 0.
+Les données sont écrasées sur le centre. $W$ est proche de la matrice nulle.
+On verra avec le jeu de donnée Moons que les données sont écrasés sur les centres de classe
+et non pas que le réseau préfère tout projeter sur 0.
 
 
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
@@ -396,6 +397,9 @@ données sont écrasés sur les centres de classe et non pas que le réseau pré
 \caption{Correction de circles après multiplication par une matrice générée aléatoirement}
 \label{fig:recap-circles-RMat-classwise}
 \end{figure}
+
+Le même résultat est visible ici. Le correcteur ne réussi pas à inverser la transformation 
+et trouve comme seul moyen de minimiser l'erreur d'envoyer tout sur le centre.
 
 {\Large \textbf{Grille tordue :}} Les données subissent une modification linéaire dépendant de l'espace.
 Une interpolation linéaire autour des points d'une grille ``bruitée''.
@@ -413,6 +417,9 @@ afin de montrer une des limites actuelles de la correction.
 \caption{Correction de circles après application d'une transformation linéaire locale}
 \label{fig:recap-circles-GridBend-classwise}
 \end{figure}
+
+Le correcteur se contente d'une légère correction et reste proche de l'identité.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subexperiment{Alignement appris : alignement au plus proche voisin au sein des classes}
@@ -438,6 +445,11 @@ et doit être refait à chaque époque. Même en parallélisant ce calcul, cette
 \label{fig:recap-circles-rot-exhaustive}
 \end{figure}
 
+Les données corrigées sont écrasées au centre, mais moins que dans le cas avec alignement
+aléatoire au sein des classes. En fait le résultat dépend beaucoup de l'initialisation.
+Mais reste mauvais tout le temps.
+
+
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
 
@@ -450,6 +462,11 @@ et doit être refait à chaque époque. Même en parallélisant ce calcul, cette
 \caption{Correction de circles après multiplication par une matrice générée aléatoirement}
 \label{fig:recap-circles-RMat-exhaustive}
 \end{figure}
+
+Les données corrigées sont écrasées au centre, mais moins que dans le cas avec alignement
+aléatoire au sein des classes. En fait le résultat dépend beaucoup de l'initialisation.
+Mais reste mauvais tout le temps.
+
 
 {\Large \textbf{Grille tordue :}} Les données subissent une modification linéaire dépendant de l'espace.
 Une interpolation linéaire autour des points d'une grille ``bruitée''.
@@ -467,6 +484,10 @@ afin de montrer une des limites actuelles de la correction.
 \caption{Correction de circles après application d'une transformation linéaire locale}
 \label{fig:recap-circles-GridBend-exhaustive}
 \end{figure}
+
+Données corrigées écrasées.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subexperiment{Alignement appris : cluster plus proche}
 Nous utilisons donc 2 K-moyennes, un pour construire $k\times n_{classes}$ clusters 
@@ -488,6 +509,9 @@ alors les clusters $C_i^\prime$ seront très probablement alignés sur des clust
 \label{fig:recap-circles-rot-cluster}
 \end{figure}
 
+Inversion parfaite. Les clusters brisent l'invariance par rotation.
+
+
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
 
@@ -500,6 +524,9 @@ alors les clusters $C_i^\prime$ seront très probablement alignés sur des clust
 \caption{Correction de circles après multiplication par une matrice générée aléatoirement}
 \label{fig:recap-circles-RMat-cluster}
 \end{figure}
+
+L'inversion est imparfaite.
+
 
 {\Large \textbf{Grille tordue :}} Les données subissent une modification linéaire dépendant de l'espace.
 Une interpolation linéaire autour des points d'une grille ``bruitée''.
@@ -518,20 +545,25 @@ afin de montrer une des limites actuelles de la correction.
 \label{fig:recap-circles-GridBend-cluster}
 \end{figure}
 
+Comme avant. Le correcteur ne fait pas grand chose.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%% X
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \experiment{X}
 
-\emph{X} est un jouet composé de $n$ classes 
+\emph{X} est un jouet composé de $n$ classes. C'est une tentative ratée pour faire Circles.
+On a pour chaque classe 4 nuages de points en X autour du centre.
 
 Toutes ces expériences ont été réalisées avec un learning rate de $0.1$ + un moment de $0.9$.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subexperiment{Alignement connu}
 Le cas où l'alignement est connu permet de vérifier que la transformation est facile ou non 
 à inverser, les autres méthodes ayant peu de chance de faire mieux.
+
 
 {\Large \textbf{Rotation :}} On applique une rotation de 50 degrés par rapport à l'origine $(0,0)$.
 
@@ -544,6 +576,7 @@ Le cas où l'alignement est connu permet de vérifier que la transformation est 
 \caption{Correction de X après une rotation de 50 degrés par rapport à l'origine avec alignement connu}
 \label{fig:recap-X-rot-pairwise}
 \end{figure}
+
 
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
@@ -575,11 +608,14 @@ afin de montrer une des limites actuelles de la correction.
 \caption{Correction de X après application d'une transformation linéaire locale}
 \label{fig:recap-X-GridBend-pairwise}
 \end{figure}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subexperiment{Alignement appris : alignement aléatoire au sein des classes}
 La première méthode (naïve) est d'aligner aléatoirement entre eux les points appartenant à la même classe.
 Ceci permet d'éviter le rapprochement de point de classes différentes. Cependant l'alignement sera mauvais
 la plupart du temps et plus les points d'une même classes seront dispersés plus cette méthode perdra en efficacité.
+
 
 {\Large \textbf{Rotation :}} On applique une rotation de 50 degrés par rapport à l'origine $(0,0)$.
 
@@ -593,6 +629,7 @@ la plupart du temps et plus les points d'une même classes seront dispersés plu
 \label{fig:recap-X-rot-classwise}
 \end{figure}
 
+
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
 
@@ -605,6 +642,7 @@ la plupart du temps et plus les points d'une même classes seront dispersés plu
 \caption{Correction de X après multiplication par une matrice générée aléatoirement}
 \label{fig:recap-X-RMat-classwise}
 \end{figure}
+
 
 {\Large \textbf{Grille tordue :}} Les données subissent une modification linéaire dépendant de l'espace.
 Une interpolation linéaire autour des points d'une grille ``bruitée''.
@@ -623,6 +661,7 @@ afin de montrer une des limites actuelles de la correction.
 \label{fig:recap-X-GridBend-classwise}
 \end{figure}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subexperiment{Alignement appris : alignement au plus proche voisin au sein des classes}
 L'idée de cet algorithme est de chercher de façon exhaustives les $k$ plus proches voisins de chaque point
@@ -634,6 +673,7 @@ un état où on lui demande de reconstruire les points de la \emph{Source} en lu
 de la \emph{Cible}, ce qu'il ne peut pas résoudre.
 De plus le calcul des distances entre tous les points \textit{Source} et les points \textit{Cibles} est quadratique
 et doit être refait à chaque époque. Même en parallélisant ce calcul, cette méthode ne passe pas à l'échelle.
+
 
 {\Large \textbf{Rotation :}} On applique une rotation de 50 degrés par rapport à l'origine $(0,0)$.
 
@@ -647,6 +687,7 @@ et doit être refait à chaque époque. Même en parallélisant ce calcul, cette
 \label{fig:recap-X-rot-exhaustive}
 \end{figure}
 
+
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
 
@@ -659,6 +700,7 @@ et doit être refait à chaque époque. Même en parallélisant ce calcul, cette
 \caption{Correction de X après multiplication par une matrice générée aléatoirement}
 \label{fig:recap-X-RMat-exhaustive}
 \end{figure}
+
 
 {\Large \textbf{Grille tordue :}} Les données subissent une modification linéaire dépendant de l'espace.
 Une interpolation linéaire autour des points d'une grille ``bruitée''.
@@ -676,6 +718,8 @@ afin de montrer une des limites actuelles de la correction.
 \caption{Correction de X après application d'une transformation linéaire locale}
 \label{fig:recap-X-GridBend-exhaustive}
 \end{figure}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subexperiment{Alignement appris : cluster plus proche}
 Nous utilisons donc 2 K-moyennes, un pour construire $k\times n_{classes}$ clusters 
@@ -684,6 +728,7 @@ clusters dans la distribution \emph{Cible} (noté $C_i$). Ces derniers servent �
 des clusters $C_i^\prime = \psi(C_i)$ en passant les points de $C_i$ dans le \emph{correcteur}.
 Si la transformation conserve les distances relatives et que le correcteur a résolu le problème
 alors les clusters $C_i^\prime$ seront très probablement alignés sur des clusters $S_j$.
+
 
 {\Large \textbf{Rotation :}} On applique une rotation de 50 degrés par rapport à l'origine $(0,0)$.
 
@@ -697,6 +742,7 @@ alors les clusters $C_i^\prime$ seront très probablement alignés sur des clust
 \label{fig:recap-X-rot-cluster}
 \end{figure}
 
+
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
 
@@ -709,6 +755,7 @@ alors les clusters $C_i^\prime$ seront très probablement alignés sur des clust
 \caption{Correction de X après multiplication par une matrice générée aléatoirement}
 \label{fig:recap-X-RMat-cluster}
 \end{figure}
+
 
 {\Large \textbf{Grille tordue :}} Les données subissent une modification linéaire dépendant de l'espace.
 Une interpolation linéaire autour des points d'une grille ``bruitée''.
@@ -733,8 +780,7 @@ afin de montrer une des limites actuelles de la correction.
 
 \experiment{Moons}
 
-\emph{Moons} est un jouet composé de $n$ classes (nuages de point gaussiens) se partageant 
-l'espace sur le cercle unité.
+\emph{Moons} est un jouet composé de $2$ classes prenant la forme de demi-lune.
 
 Toutes ces expériences ont été réalisées avec un learning rate de $0.1$ + un moment de $0.9$.
 
@@ -742,6 +788,7 @@ Toutes ces expériences ont été réalisées avec un learning rate de $0.1$ + u
 \subexperiment{Alignement connu}
 Le cas où l'alignement est connu permet de vérifier que la transformation est facile ou non 
 à inverser, les autres méthodes ayant peu de chance de faire mieux.
+
 
 {\Large \textbf{Rotation :}} On applique une rotation de 50 degrés par rapport à l'origine $(0,0)$.
 
@@ -754,6 +801,7 @@ Le cas où l'alignement est connu permet de vérifier que la transformation est 
 \caption{Correction de moons après une rotation de 50 degrés par rapport à l'origine avec alignement connu}
 \label{fig:recap-moons-rot-pairwise}
 \end{figure}
+
 
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
@@ -785,11 +833,14 @@ afin de montrer une des limites actuelles de la correction.
 \caption{Correction de moons après application d'une transformation linéaire locale}
 \label{fig:recap-moons-GridBend-pairwise}
 \end{figure}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subexperiment{Alignement appris : alignement aléatoire au sein des classes}
 La première méthode (naïve) est d'aligner aléatoirement entre eux les points appartenant à la même classe.
 Ceci permet d'éviter le rapprochement de point de classes différentes. Cependant l'alignement sera mauvais
 la plupart du temps et plus les points d'une même classes seront dispersés plus cette méthode perdra en efficacité.
+
 
 {\Large \textbf{Rotation :}} On applique une rotation de 50 degrés par rapport à l'origine $(0,0)$.
 
@@ -803,6 +854,7 @@ la plupart du temps et plus les points d'une même classes seront dispersés plu
 \label{fig:recap-moons-rot-classwise}
 \end{figure}
 
+
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
 
@@ -815,6 +867,7 @@ la plupart du temps et plus les points d'une même classes seront dispersés plu
 \caption{Correction de moons après multiplication par une matrice générée aléatoirement}
 \label{fig:recap-moons-RMat-classwise}
 \end{figure}
+
 
 {\Large \textbf{Grille tordue :}} Les données subissent une modification linéaire dépendant de l'espace.
 Une interpolation linéaire autour des points d'une grille ``bruitée''.
@@ -833,6 +886,7 @@ afin de montrer une des limites actuelles de la correction.
 \label{fig:recap-moons-GridBend-classwise}
 \end{figure}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subexperiment{Alignement appris : alignement au plus proche voisin au sein des classes}
 L'idée de cet algorithme est de chercher de façon exhaustives les $k$ plus proches voisins de chaque point
@@ -844,6 +898,7 @@ un état où on lui demande de reconstruire les points de la \emph{Source} en lu
 de la \emph{Cible}, ce qu'il ne peut pas résoudre.
 De plus le calcul des distances entre tous les points \textit{Source} et les points \textit{Cibles} est quadratique
 et doit être refait à chaque époque. Même en parallélisant ce calcul, cette méthode ne passe pas à l'échelle.
+
 
 {\Large \textbf{Rotation :}} On applique une rotation de 50 degrés par rapport à l'origine $(0,0)$.
 
@@ -857,6 +912,7 @@ et doit être refait à chaque époque. Même en parallélisant ce calcul, cette
 \label{fig:recap-moons-rot-exhaustive}
 \end{figure}
 
+
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
 
@@ -869,6 +925,7 @@ et doit être refait à chaque époque. Même en parallélisant ce calcul, cette
 \caption{Correction de moons après multiplication par une matrice générée aléatoirement}
 \label{fig:recap-moons-RMat-exhaustive}
 \end{figure}
+
 
 {\Large \textbf{Grille tordue :}} Les données subissent une modification linéaire dépendant de l'espace.
 Une interpolation linéaire autour des points d'une grille ``bruitée''.
@@ -886,6 +943,8 @@ afin de montrer une des limites actuelles de la correction.
 \caption{Correction de moons après application d'une transformation linéaire locale}
 \label{fig:recap-moons-GridBend-exhaustive}
 \end{figure}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subexperiment{Alignement appris : cluster plus proche}
 Nous utilisons donc 2 K-moyennes, un pour construire $k\times n_{classes}$ clusters 
@@ -894,6 +953,7 @@ clusters dans la distribution \emph{Cible} (noté $C_i$). Ces derniers servent �
 des clusters $C_i^\prime = \psi(C_i)$ en passant les points de $C_i$ dans le \emph{correcteur}.
 Si la transformation conserve les distances relatives et que le correcteur a résolu le problème
 alors les clusters $C_i^\prime$ seront très probablement alignés sur des clusters $S_j$.
+
 
 {\Large \textbf{Rotation :}} On applique une rotation de 50 degrés par rapport à l'origine $(0,0)$.
 
@@ -907,6 +967,7 @@ alors les clusters $C_i^\prime$ seront très probablement alignés sur des clust
 \label{fig:recap-moons-rot-cluster}
 \end{figure}
 
+
 {\Large \textbf{Random matrix :}} les données sont multipliées par une matrice 2D aléatoirement générée
  (la même pour tout le monde)
 
@@ -919,6 +980,7 @@ alors les clusters $C_i^\prime$ seront très probablement alignés sur des clust
 \caption{Correction de moons après multiplication par une matrice générée aléatoirement}
 \label{fig:recap-moons-RMat-cluster}
 \end{figure}
+
 
 {\Large \textbf{Grille tordue :}} Les données subissent une modification linéaire dépendant de l'espace.
 Une interpolation linéaire autour des points d'une grille ``bruitée''.
