@@ -1,0 +1,112 @@
+%% Template pour rapport de stage du master AIC (Apprentissage,
+%% Information et Contenu), Université Paris-Saclay
+%% Template d'origine : 
+%% Copyright (C) 2008 Johan Oudinet <oudinet@lri.fr>
+%%  
+%% Permission is granted to make and distribute verbatim copies of
+%% this manual provided the copyright notice and this permission notice
+%% are preserved on all copies.
+%%  
+%% Permission is granted to process this file through TeX and print the
+%% results, provided the printed document carries copying permission
+%% notice identical to this one except for the removal of this paragraph
+%% (this paragraph not being relevant to the printed manual).
+%%  
+%% Permission is granted to copy and distribute modified versions of this
+%% manual under the conditions for verbatim copying, provided that the
+%% entire resulting derived work is distributed under the terms of a 
+%% permission notice identical to this one.
+%%  
+%% Permission is granted to copy and distribute translations of this manual
+%% into another language, under the above conditions for modified versions,
+%% except that this permission notice may be stated in a translation
+%% approved by the Free Software Foundation
+%%  
+
+% Présentation de la méthode et des résultats
+
+\chapter*{Notes}
+
+On cherche explicitement à transformer un jeu de données en ce qu'il aurait 
+été s'il avait été tiré avec la distribution \cible.
+
+Exemples :
+\begin{itemize}
+	\item Un objet photographié de face (\source)
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Squelette}
+$D_s$; $D_t$
+
+\begin{itemize}
+\item Clustering; définition $C_1...C_K; C'_1...C'_{K'}$
+\item Ingrédient: Optimal Transport
+\begin{itemize}
+\item input: matrice de cout $c_{ij}$ (initialiser random; uniforme)
+\item output: transport optimal, matrice $t_{ij}$: comment on vaporise $c_i$ sur les $c'_j$ 
+\item comment: résolution approchée; cout circa linéaire en $K$ (XX préciser)
+\end{itemize}
+\item Ingredient 2: étant donné une matrice de transport, on apprend un DANN
+\begin{itemize}
+\item On apprend $\phi_s$ et $\phi_t$.
+\item partie adversariable comme d'hab
+\item partie label: K' output; multi-label (on prédit un vecteur)
+\item $x_s$: label attendu, sachant que $x_s$ est dans $C_i$, est sur chacun des $K'$ noeuds de sortie, $m_{ij}$
+\item $x_t$: label attendu, sachant que $x_t$ est dans $C'_j$: $(0....1..0)$ avec un 1 sur le noeud $j$.
+\item Note: regarder le transposé; prendre le plus simple qui marche.
+\end{itemize}
+\item Ingrédient 3: 
+\begin{itemize}
+\item On a maintenant une représentation commune; 
+\item On agrege les prédictions sur les clusters sources, et leur attribution aux clusters cibles;
+\item Cette agregation nous donne la nouvelle matrice de transport.
+\item Goto 2.
+\end{itemize}
+\end{itemize}
+NB: on pourrait aussi collapser Step2 et Step3; en mettant à jour immédiatement la matrice de transport à la volée; 
+Ici la question est: quelle est la stabilité de la matrice finale; à quelles conditions y a-t-il unicité; 
+Pistes: $g \to T_g$; ici, on a besoin d'hypothèses sur la simplicité de g.
+Savoir comparer $T_{g1}$ et $T_{g2}$; ici on arrive à des trucs d'entropie; plus est basse mieux c'est; 
+ici dans le paysage on aurait besoin de prendre en compte la complexité de g; ici discuter avec Guillaume.
+
+En fait, on prend l'agregation des softmax des x derniers exemples $T_{empirique}$, on s'en sert pour mettre à jour $T_t$; on cherche un $T_{t+1}$ tq: son rang est pareil (pas dégénerescence); il est plus proche de $T_{empirique}$ que $T_t$.
+rang pareil, peut-etre un peu trop mou; empecher que sa plus petite valeur propre devienne misérable.
+
+\chapter{Protocole expérimental}
+\section{Buts}
+Savoir si ca marche en augmentant la difficulté:
+\begin{itemize}
+\item problemes artificiels: transformations linéaires, montrer qu'on les inverse; non linéaires par ex. un réseau neuronal; la complexité, nombre de couches; (dont un pb en 2d pour voir ce qu'on fait).
+\item un problème pseudo-réel; images satellites; noyau de convolution; prendre des patchs; objectif est de deconvoluer. 
+\end{itemize}
+
+\section{Méthodologie}
+\begin{itemize}
+\item liste des hyper-paramètres (nombre d'exemples et nombre de clusters)
+\item architectures
+\item epochs
+\item indicateurs de performance
+\end{itemize}
+
+\chapter{Résultats}
+\section{steps}
+\begin{itemize}
+\item pb artificiels; cible: mixture de Gaussiennes; source (image par un NN de p couches)
+\item entrainer g; partie label; observer $T_g$; comparer à la ground truth.
+\end{itemize}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "rapportM2R"
+%%% End: 
