@@ -74,6 +74,13 @@ C =
 $$
 
 on cherche : 
+$$
+T = 
+\begin{pmatrix}
+   t_{AA^\prime} & t_{AB^\prime} \\
+   t_{BA^\prime} & t_{BB^\prime} 
+\end{pmatrix}
+$$
 \begin{equation}
 \min_T \left<T,C\right> = \min_{T} 
 t_{AA^\prime}*c_{AA^\prime} + 
@@ -149,7 +156,7 @@ plutôt bien expliqué dans la première partie de \cite{Knight2008}
 (bon après coup il est pas compliqué en fait).
 
 
-L'approche ce Cuturi consiste à ajouter une contrainte à la solution.
+L'approche de Cuturi consiste à ajouter une contrainte à la solution.
 
 \begin{equation}
 KL(T||\mathbf{wz}^T ) \leq \gamma
