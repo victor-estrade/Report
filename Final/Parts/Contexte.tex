@@ -28,17 +28,62 @@
 \chapter{Contexte}
 
 
-\chapter{Objectif, motivations}
-baratin
-objectif est un plongement $g$ de l'espace source sur l'espace cible; tel que:
-liste des propriétés attendues:
+
+Cependant on ne dispose pas nécessairement de la correspondance entre un élément $x_{src}$ de 
+la \source{} et ce qu'il aurait été dans l'espace \cible{} $x_{tgt}$.
+
+On a 3 cas dans l'ordre croissant de difficulté:
 \begin{itemize}
-\item Si l'on dispose d'un appariement un à un ($x_source$ et $f(x_source)$), le plongement réalise $g = f^{-1}$
-\item Si l'on dispose de classes définies sur source et cible, ces classes sont préserv'ees par le plongement, i.e. classe $(x_source)$ = classe$(g(x_source))$
-\item Distribution g(source) = distribution cible (ou du moins, ces deux distributions ne sont pas distinguables).
+\item On dispose de la correspondance $x_{src}\to x_{tgt}$. 
+	Il s'agit d'un cas d'apprentissage supervisé (régression multiple, facile ?).
+\item On a un paquet de donnée \source{} et leur correspondant exacte dans la \cible{}.
+	Cependant on ignore quel élément $x_{src}$ correspond à quel autre élément $x_{tgt}'$.
+\item On a un jeu de donnée \source{} et un jeu de donnée \cible{} 
+	qui ne sont pas les homologues des données \sources{}.
+\end{itemize}
++ des mélanges de ces 3 cas.
+
+
+\section{Prop} % (fold)
+\label{sec:prop}
+
+L'objectif est un plongement $g$ de l'espace \source{} sur l'espace \cible{}; tel que:
+\begin{itemize}
+\item Si l'on dispose d'un appariement un à un ($x_{source}$ et $f(x_{source}) = x_{target}$),
+	le plongement réalise $g = f^{-1}$
+\item Si l'on dispose de classes définies sur source et cible,
+	ces classes sont préservées par le plongement, 
+	i.e. $\text{classe}(x_{source}) = \text{classe}(g(x_{source}))$
+\item Distribution $g(source)$ = distribution cible 
+	(ou du moins, ces deux distributions ne sont pas distinguables).
 \end{itemize}
 
-Nous imposons le plongement en imposant que la partie cible sur l'intermediaire soit l'identité 
+Nous imposons le plongement en imposant que la partie cible sur l'intermédiaire soit l'identité.
+
+% section prop (end)
+
+
+\TODO Présenter les exemples de problème qu'on va traiter et ceux qu'on aurait aimé traiter.
+
+
+
+\section{Comparaison avec DANN} % (fold)
+\label{sec:comparaison_avec_dann}
+
+\TODO Dire en quoi ça ressemble au DANN et en quoi c'est différent.
+\TODO (De toute manière on fait les expériences avec et sans DANN pour voir)
+
+Ce que fait DANN:\\
+chercher une représentation commune de la \source{} et de la \cible{} ne détruisant pas 
+l'information nécessaire à la tâche demandée au réseau de neurone (classification ou autre).
+
+Ce qu'il ne fait pas:\\
+La représentation commune donne quoi ? \TODO
+
+
+% section comparaison_avec_dann (end)
+
+
 
 %%% Local Variables: 
 %%% mode: latex

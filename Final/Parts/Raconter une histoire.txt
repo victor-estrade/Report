@@ -1,0 +1,65 @@
+Raconter une histoire.
+Quelle histoire veux-tu raconter ?
+- Bah je sais pas... 
+
+	Il était une fois un problème (bon début XD)
+	Deux royaumes très similaires se faisaient face. L'un d'eux nous est très familier.
+	Mais peut-on utiliser ce que l'on sait faire dans le premier dans le second ?
+	On cherche à comprendre ce problème et pourquoi pas le résoudre.
+	On veux pouvoir s'adapter.
+	Notre approche: 
+		- Avoir une baguette magique qui transforme les éléments du premier royaume en élément du second.
+		On regarde alors à quoi ressemble un objet après transformation.
+	Comment ça se passe ? Comment sont fabriquées les baguettes magiques ? 
+
+
+
+Du coup : 
+
+Introduction
+============
+Présentation du labo, de l'équipe. De ML ?
+
+
+Contexte, Objectif, Motivation
+==============================
+C'est quoi le problème ?
+C'est quoi les limites de ce problème ?
+Dire pourquoi le problème est intéressant.
+Présenter les exemples de problème qu'on va traiter et ceux qu'on aurait aimé traiter.
+Comment on va le résoudre ?
+Dire en quoi ça ressemble au DANN et en quoi c'est différent.
+(De toute manière on fait les expériences avec et sans DANN pour voir)
+
+
+Squelette de l'algo
+====================
+Idée directrice
+
+Squelette détaillé de l'algo.
+
+
+Protocole expérimental
+======================
+Objectifs
+
+Quelles données ? Pourquoi ces jeux de donnée sont intéressant ?
+(Tous les décrire rapidement)
+
+Méthode:
+	Hyper-paramètre (époques, pas d'apprentissage, architecture, etc)
+	Séparation entrainement/validation/test.
+	Indicateurs de performance mesurés
+	et autres détails
+
+Résultats
+
+
+
+
+
+Conclusion
+==========
+C'est cool mais il reste beaucoup à faire.
+Ce que j'ai appris : sur la recherche, sur l'apprentissage, sur le code (lasagne, theano, etc) ?
+

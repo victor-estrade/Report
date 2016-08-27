@@ -1,0 +1,66 @@
+\chapter{Adaptation de domaine, Plongement Adversarial et Limitations}
+\label{chap:tranche1}
+
+Ce chapitre décrit les premiers résultats de mise en \oe uvre de DANN (chapitre \ref{chap:SOA}) pour réaliser un plongement admissible. 
+
+\section{Contexte 1: Appariement connu}
+La tache est celle d'une régression multi-dimensionnelle. 
+Qq chiffres. 
+
+En résumé, ce problème ne présente pas de difficulté.
+
+\section{Contexte 2: Plongement sous contrainte de classe}
+
+Les espaces source et cible sont inclus dans $R^d$. L'espace des classes $Y=\{0,1 \ldots, k\}$ est le même pour les données sources et cibles. 
+On dispose d'une base d'entrainement source te cible --- les notations.
+
+L'architecture neuronale réalise le plongement, mappant l'espace source dans l'espace cible. 
+L'image souhaitée d'un exemple source $x'_i$ est un exemple cible $x_j$ tiré aléatoirement parmi les exemples cibles de même classe que $x'_i$. 
+
+L'architecture .. 
+\begin{table}
+\centering
+\begin{tabular}{c|c}
+ &  \\
+ & 
+\end{tabular}
+\caption{Hyper-paramètres de l'architecture neuronale}
+\label{tab:DANN-hp}
+\end{table}
+
+\section{Premiers résultats}
+L'approche ci-dessus a été expérimentée sur deux problèmes artificiels, les mixtures de Gaussiennes et les lunes. 
+
+\subsection{Mixture de Gaussiennes}
+
+ici tout marche, un tableau.
+
+\subsection{Les lunes}
+Une image des lunes.
+
+Ça se gate.
+
+image du rabougrissement.
+
+\section{Discussion}
+ÉLements:
+\begin{itemize}
+\item La partie adversariale ne sert à rien pour les Gaussiennes
+\item Mais il faut muscler la partie adversariale pour les lunes
+\item Ici, revoir les expériences.
+\end{itemize}
+
+Alternative: définir des clusters sur les lunes.
+(ce qui nous ramène au contexte gaussien, qui marchait bien)
+
+\section{Contexte 3: Plongement sous contrainte de cluster}
+
+Les données sources et cibles sont indépendamment segmentées en clusters.
+On note $z_i$ (resp. $z'_j$) l'indice du cluster de l'exemple $x_i$ (resp. $x'_j$). 
+
+L'image souhaitée d'un exemple source $x'_i$ d'un cluster $z_i$ est un exemple cible $x_j$ tiré aléatoirement parmi les exemples cibles du cluster $z_j$ tel que: 
+$j = \mbox{~arg min~} \left\{C(z_j) + || Avg_{x'_k \in z_i} \phi(x'_k) - Avg_{x_k \in z_j} x_k || \right\}$
+où $C(j)$ est le nombre d'exemples sources envoyés précédemment sur le cluster cible $z_j$.
+
+\section{Résultats}
+Ça améliore.

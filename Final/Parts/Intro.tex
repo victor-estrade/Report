@@ -23,10 +23,116 @@
 %% approved by the Free Software Foundation
 %%  
 
+\chapter{Objectif, motivations}
+Ce chapitre présente le contexte de notre étude et nos objectifs. Nous décrivons le plan de travail qui a été suivi, discutons les contributions du stage, et indiquons l'organisation de ce document.
 
-% Présentation du labo et de l'équipe #baratin
+\section{Contexte}
 
-\chapter{Introduction}
+% La physique, le problème données réelles/simulées
+Le problème initiateur de ce projet provient de la physique des hautes énergies.
+Nous disposons de données expérimentales que l'on souhaite comparer de façon rigoureuse
+aux prédictions de la théorie.
+Les simulations, construites à partir des connaissances a priori, génèrent des données
+que l'on va comparer aux données expérimentales.
+Les physiciens sont conscients des limites du simulateur, les données comportent un biais
+que l'on souhaite mettre en évidence.
+Ainsi on cherche à réduire le \emph{gap réalité-simulation}.
+
+% Généralisation. C'est un problème d'adaptation de domaine. Qézako ?
+Ce problème, du point de vue apprentissage machine, est un cas particulier d'\emph{adaptation de domaine}
+qui est un cas particulier de \emph{transfert d'apprentissage}.
+% Transfert d'apprentissage
+Le \emph{transfert d'apprentissage} consiste à transférer les connaissances 
+acquises sur un ou plusieurs domaines, dit \sources{}, sur d'autres domaines 
+différents mais comportant des similitudes, dit domaines \cibles{}.
+L'\emph{adaptation de domaine} consiste à adapter un modèle entrainé sur une distribution de données \sources{}
+afin qu'il ait de bonnes performances sur les données de la ou les distributions \cibles{} 
+(encore une fois différentes mais comportant des similitudes).
+
+% Autres exemples
+Exemples de domaines:
+\begin{itemize}
+	\item Données simulées (domaine 1) et données réelles (domaine 2).
+	\item Critique de films (domaine 1), jeux-vidéos (domaine 2), livres (domaine 3), électro-ménagés (domaine 4)
+	\item Une image nette (domaine 1) et sa version flou (domaine 2).
+	\item Un patient recevant le placébo (domaine 1) et un recevant le traitement à tester (domaine 2).
+	\item Un objet photographié de face (domaine 1) puis sous un autre angle (domaine 2) puis un autre (domaine 3).
+\end{itemize}
+
+% 2 ou + jeux de données ayant des distributions différentes, mais fondamentalement pareilles 
+% définir source et cible
+On dispose de deux ou plus jeux de données provenant de distributions différentes, mais fondamentalement
+similaire du point de vue de la tâche que l'on souhaite accomplir.
+Une partie de ces jeux de données (1 ou +) forment les données \sources{}. 
+On dispose des labels pour les données \sources{} et on sait construire un modèle performant 
+pour la tâche à accomplir (ex: classification ou régression).
+Quand aux données \cibles{} on cherche à utiliser les données \sources{} afin d'améliorer les performances.
+On distingue trois cas d'\emph{adaptation de domaine}:
+\begin{itemize}
+	\item \textbf{Non supervisée} : les labels \cibles{} ne sont pas disponibles
+	\item \textbf{Semi-supervisée} : une petite partie des labels \cibles{} est disponible
+	\item \textbf{Supervisée} : toutes les données \cibles{} sont labellisées.
+\end{itemize}
+
+
+% Motivation
+\TODO
+Les données labellisées sont rares ou chères. 
+On en a déjà certaine, similaire et on voudrait les utiliser.
+
+
+% Les modèles galèrent à généralisé sur une distribution non vu à l'entrainement
+\TODO
+Les modèles sont très sensibles aux modifications de la distribution des données.
+La généralisation est difficile.
+
+% L'objectif c'est de les aider.
+\TODO
+On veux pouvoir s'adapter à ces difficulté.
+
+
+% C'est quoi les limites de ce problème ?
+
+
+% Dire pourquoi le problème est intéressant.
+
+
+
+\section{Discussion et objectifs}
+% C'est quoi notre approche
+% Comment on va le résoudre ?
+On cherche explicitement à transformer un jeu de données \source{} en ce qu'il aurait 
+été s'il avait été généré à partir de la distribution \cible{}.
+
+L'objectif est un plongement $g$ de l'espace \source{} sur l'espace \cible{}, qui soit admissible, au sens de vérifier les propriétés suivantes : 
+\begin{itemize}
+\item Si l'on dispose d'un appariement un à un ($x_source$ et $f(x_source)$), le plongement réalise $g = f^{-1}$
+\item Si l'on dispose de classes définies sur source et cible, ces classes sont préservées par le plongement, i.e. classe $(x_source)$ = classe$(g(x_source))$
+\item Distribution g(source) = distribution cible (ou du moins, ces deux distributions ne sont pas distinguables).
+\end{itemize}
+
+Nous imposons le plongement en imposant que la partie cible sur l'intermédiaire soit l'identité. 
+
+\section{Plan de travail}
+Nous distinguerons trois contextes, selon la précision des connaissances disponibles. 
+Dans un premier contexte, on dispose de l'appariement entre données sources. Cet objectif est le premier que nous avons attaqué. Nous verrons expérimentalement que cet objectif ne présente pas de difficultés.
+
+Le second.. (chapitre \ref{chap:tranche1}).
+
+Le troisième (chapitre \ref{chap:tranche2}).
+
+\section{Contributions du stage}
+
+\section{Organisation du document}
+
+Ce document est organisé de la façon suivante. 
+Nous présenterons tout d'abord les approches de l'état de l'art
+dont nous nous sommes inspirés pour la réalisation du système \XX{}, l'adaptation de domaine et le transport optimal.
+Le chapitre \ref{chap:tranche1} présente la première application de l'adaptation de domaine sur des problèmes jouets de difficultés variables, et montre les limitations de cette approche pour réaliser le plongement voulu. 
+
+
+
+
 
 
 
